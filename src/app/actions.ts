@@ -2,7 +2,6 @@
 
 import {
   generateImageDescriptionFlow,
-  GenerateImageDescriptionInputSchema,
 } from '@/ai/flows/generate-image-description';
 import {
   findObjectsFlow,
@@ -10,6 +9,13 @@ import {
 import { z } from 'zod';
 
 // Types for Image Description
+const GenerateImageDescriptionInputSchema = z.object({
+  imageUrl: z.string(),
+  apiKey: z.string(),
+  model: z.string(),
+});
+
+
 type ImageDescriptionResult = {
   description?: string;
   error?: string;
@@ -96,6 +102,11 @@ export async function findObjectsAction(
       return {
         error:
           'Your Gemini API key appears to be invalid. Please check it and try again.',
+      };
+    }
+    if (error.message.includes('invalid JSON')) {
+       return {
+        error: 'The AI returned an invalid response. Please try again.',
       };
     }
     return {

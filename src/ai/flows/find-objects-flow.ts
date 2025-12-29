@@ -49,13 +49,17 @@ export const findObjectsFlow = ai.defineFlow(
     const prompt = customAi.definePrompt({
       name: 'findObjectsPrompt',
       input: { schema: FindObjectsInputSchema },
-      output: { schema: FindObjectsOutputSchema },
       prompt: `You are an AI vision expert that finds objects in images.
-    
+
       Analyze the image provided and determine if the following objects are present: {{#each objects}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}.
-      
-      For each object, respond with whether it was found (true/false) and the count of how many times it appears.
-      
+
+      Respond with ONLY a valid JSON string. Do not include any other text or markdown formatting.
+      The JSON object should have a single key "results". The value of "results" should be an object where each key is an object name you were asked to find.
+      For each object name, the value should be an object with two keys: "found" (a boolean) and "count" (a number).
+
+      Example response format:
+      {"results":{"car":{"found":true,"count":2},"bottle":{"found":true,"count":1},"chair":{"found":false,"count":0}}}
+
       Image:
       {{media url=imageUrl}}
       `,
@@ -83,6 +87,19 @@ export const findObjectsFlow = ai.defineFlow(
     });
 
     const { output } = await prompt(input);
-    return output!;
+
+    if (!output) {
+      throw new Error('The AI returned an empty response.');
+    }
+    
+    try {
+      // The model should return a raw JSON string. We parse it here.
+      const parsedOutput = JSON.parse(output as string);
+      return FindObjectsOutputSchema.parse(parsedOutput);
+    } catch (e) {
+      console.error('Failed to parse JSON from AI response:', e);
+      console.error('Raw AI Output:', output);
+      throw new Error('The AI returned an invalid JSON response.');
+    }
   }
 );
