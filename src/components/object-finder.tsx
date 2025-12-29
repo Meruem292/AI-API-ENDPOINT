@@ -82,7 +82,7 @@ export function ObjectFinder() {
       imageUrl: '',
       objects: '',
       apiKey: '',
-      model: 'gemini-2.5-flash',
+      model: 'gemini-1.5-flash-latest',
     },
   });
 
@@ -112,6 +112,7 @@ export function ObjectFinder() {
             variant: 'destructive',
             title: 'Error',
             description: result.error,
+            duration: 20000,
           });
         } else if (result.results) {
           setResults(result.results);
@@ -122,6 +123,7 @@ export function ObjectFinder() {
           title: 'Error',
           description:
             'Could not process the image. Please check that the URL is correct and publicly accessible.',
+          duration: 20000,
         });
       }
     });
@@ -233,7 +235,7 @@ export function ObjectFinder() {
                         </div>
                       </FormControl>
                        <FormDescriptionComponent>
-                        Suggested: gemini-2.5-flash, gemini-2.5-flash-lite, gemini-robotics-er-1.5-preview
+                        Suggested: gemini-1.5-flash-latest, gemini-1.5-pro-latest
                       </FormDescriptionComponent>
                       <FormMessage />
                     </FormItem>

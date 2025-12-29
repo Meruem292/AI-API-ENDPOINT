@@ -71,7 +71,7 @@ export function ImageDescriber() {
     defaultValues: {
       imageUrl: '',
       apiKey: '',
-      model: 'gemini-2.5-flash',
+      model: 'gemini-1.5-flash-latest',
     },
   });
 
@@ -114,7 +114,7 @@ export function ImageDescriber() {
 -d '{
   "imageUrl": "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0",
   "apiKey": "YOUR_GEMINI_API_KEY",
-  "model": "gemini-2.5-flash"
+  "model": "gemini-1.5-flash-latest"
 }'`;
 
   return (
@@ -201,8 +201,7 @@ export function ImageDescriber() {
                         </div>
                       </FormControl>
                       <FormDescriptionComponent>
-                        Suggested: gemini-2.5-flash, gemini-2.5-flash-lite,
-                        gemini-robotics-er-1.5-preview
+                        Suggested: gemini-1.5-flash-latest, gemini-1.5-pro-latest
                       </FormDescriptionComponent>
                       <FormMessage />
                     </FormItem>

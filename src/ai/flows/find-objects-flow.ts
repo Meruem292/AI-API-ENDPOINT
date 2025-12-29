@@ -98,16 +98,16 @@ export const findObjectsFlow = ai.defineFlow(
       const rawOutput = output as string;
       const jsonMatch = rawOutput.match(/(\{[\s\S]*\})/);
       if (!jsonMatch) {
-        throw new Error('No JSON object found in the AI response.');
+        throw new Error(`No JSON object found in the AI response. Raw response: ${rawOutput}`);
       }
       
       const jsonString = jsonMatch[1];
       const parsedOutput = JSON.parse(jsonString);
       return FindObjectsOutputSchema.parse(parsedOutput);
-    } catch (e) {
+    } catch (e: any) {
       console.error('Failed to parse JSON from AI response:', e);
       console.error('Raw AI Output:', output);
-      throw new Error('The AI returned an invalid JSON response.');
+      throw new Error(`The AI returned an invalid JSON response. Raw response: ${output as string}`);
     }
   }
 );

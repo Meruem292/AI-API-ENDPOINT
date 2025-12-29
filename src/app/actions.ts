@@ -104,9 +104,9 @@ export async function findObjectsAction(
           'Your Gemini API key appears to be invalid. Please check it and try again.',
       };
     }
-    if (error.message.includes('invalid JSON')) {
+    if (error.message.includes('invalid JSON response')) {
        return {
-        error: 'The AI returned an invalid response. Please try again.',
+        error: `The AI returned an invalid response. Please try again. Raw response: ${error.message.substring(error.message.indexOf("Raw response:"))}`,
       };
     }
     return {
