@@ -12,6 +12,7 @@ import {
   Loader2,
   Cpu,
   Webhook,
+  AlertTriangle,
 } from 'lucide-react';
 
 import { useToast } from '@/hooks/use-toast';
@@ -37,6 +38,12 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 
 const formSchema = z.object({
   imageUrl: z.string().url({ message: 'Please enter a valid image URL.' }),
@@ -132,6 +139,46 @@ export function ImageDescriber() {
                   Enter an image URL and your Gemini API key to get an
                   AI-generated description.
                 </CardDescription>
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger>
+                      <div className="flex items-center gap-2 text-sm font-semibold">
+                        <AlertTriangle className="h-4 w-4" /> Important: API Key
+                        Usage
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="prose prose-sm max-w-none text-muted-foreground">
+                        <p>
+                          This tool requires a user-provided Gemini API key for
+                          testing. For security, please adhere to the following:
+                        </p>
+                        <ul>
+                          <li>
+                            <strong>Do NOT use production or paid keys.</strong>{' '}
+                            Create a temporary key for testing only.
+                          </li>
+                          <li>
+                            Set strict, low quota limits in Google AI Studio.
+                          </li>
+                          <li>
+                            Delete the key immediately after you finish testing.
+                          </li>
+                          <li>
+                            Any key used in a client-side application (like
+                            this one, or on an ESP32/Arduino) can be extracted.
+                            Assume it is not secure.
+                          </li>
+                        </ul>
+                        <p className="text-xs">
+                          Users are solely responsible for the security of their
+                          API keys. The developer is not liable for any misuse,
+                          quota loss, or charges.
+                        </p>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               </CardHeader>
               <CardContent className="space-y-4">
                 <FormField

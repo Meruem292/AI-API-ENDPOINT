@@ -3,7 +3,6 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { Header } from '@/components/header';
-import { ApiKeyWarningDialog } from '@/components/api-key-warning-dialog';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -23,7 +22,6 @@ export default function RootLayout({
         <Header />
         {children}
         <Toaster />
-        <ApiKeyWarningDialog />
       </body>
     </html>
   );
