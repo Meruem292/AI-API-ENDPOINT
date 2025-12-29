@@ -29,6 +29,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription as FormDescriptionComponent,
   FormField,
   FormItem,
   FormLabel,
@@ -177,12 +178,16 @@ export function ImageDescriber() {
                       <div className="relative">
                         <Cpu className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                         <Input
-                          placeholder="gemini-2.5-flash"
+                          placeholder="gemini-3-flash"
                           {...field}
                           className="pl-10"
                         />
                       </div>
                     </FormControl>
+                    <FormDescriptionComponent>
+                      Suggested: gemini-3-flash, gemini-pro-vision,
+                      gemini-2.5-flash
+                    </FormDescriptionComponent>
                     <FormMessage />
                   </FormItem>
                 )}
