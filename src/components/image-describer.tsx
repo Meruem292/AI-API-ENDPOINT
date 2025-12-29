@@ -92,7 +92,7 @@ export function ImageDescriber() {
           variant: 'destructive',
           title: 'Image Error',
           description:
-            'Could not load the image from the provided URL. Please check the URL and try again.',
+            'Could not process the image from the provided URL. Please check the URL and try again.',
         });
       }
     });

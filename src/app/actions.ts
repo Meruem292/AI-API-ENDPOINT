@@ -29,8 +29,7 @@ export async function getImageDescriptionAction(
       };
     }
     return {
-      error:
-        'Failed to generate description. Please check that the image is valid and publicly accessible.',
+      error: `Failed to generate description: ${error.message}`,
     };
   }
 }
