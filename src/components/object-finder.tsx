@@ -146,20 +146,20 @@ export function ObjectFinder() {
   return (
     <div className="grid w-full max-w-6xl grid-cols-1 gap-8">
       <div className="grid w-full grid-cols-1 gap-8 lg:grid-cols-2">
-        <Card className="shadow-lg">
+        <Card>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <CardHeader>
-                <CardTitle className="font-headline flex items-center gap-3 text-3xl">
-                  <Search className="h-8 w-8 text-primary" />
-                  ObjectFinder
+                <CardTitle className="font-headline flex items-center gap-3 text-2xl">
+                  <Search className="h-6 w-6 text-primary" />
+                  Object Finder
                 </CardTitle>
                 <CardDescription>
                   Find and count specific objects within an image using your
                   Gemini API key.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-4">
                 <FormField
                   control={form.control}
                   name="imageUrl"
@@ -277,7 +277,7 @@ export function ObjectFinder() {
           </Form>
         </Card>
 
-        <Card className="flex flex-col shadow-lg">
+        <Card className="flex flex-col">
           <CardHeader>
             <CardTitle>Result</CardTitle>
             <CardDescription>
@@ -314,15 +314,16 @@ export function ObjectFinder() {
                     <Skeleton className="h-6 w-1/4" />
                   </div>
                 ) : results ? (
-                  <div className="flex flex-wrap gap-4">
+                  <div className="flex flex-wrap gap-2">
                     {Object.entries(results).map(([key, value]) => (
                       <div
                         key={key}
-                        className="flex flex-col items-center gap-2 rounded-lg border p-3"
+                        className="flex items-center gap-2 rounded-lg border p-2"
                       >
                         <span className="font-medium capitalize">{key}</span>
                         <Badge
-                          variant={value.found ? 'default' : 'destructive'}
+                          variant={value.found ? 'default' : 'secondary'}
+                          className="text-xs"
                         >
                           {value.found
                             ? `Found: ${value.count}`
@@ -342,10 +343,10 @@ export function ObjectFinder() {
         </Card>
       </div>
 
-      <Card className="shadow-lg">
+      <Card>
         <CardHeader>
-          <CardTitle className="font-headline flex items-center gap-3 text-2xl">
-            <Webhook className="h-7 w-7 text-primary" />
+          <CardTitle className="font-headline flex items-center gap-3 text-xl">
+            <Webhook className="h-6 w-6 text-primary" />
             API Endpoint Instructions
           </CardTitle>
           <CardDescription>
@@ -357,19 +358,19 @@ export function ObjectFinder() {
           <div className="space-y-4">
             <div>
               <p className="font-semibold">Endpoint</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="font-mono text-sm text-muted-foreground">
                 POST /api/find-objects
               </p>
             </div>
             <div>
               <p className="font-semibold">Example Request (cURL)</p>
-              <pre className="mt-2 overflow-x-auto rounded-md bg-muted p-4 text-sm">
+              <pre className="mt-2 overflow-x-auto rounded-md bg-muted p-4 font-mono text-sm">
                 <code>{curlExample}</code>
               </pre>
             </div>
             <div>
               <p className="font-semibold">Successful Response</p>
-              <pre className="mt-2 overflow-x-auto rounded-md bg-muted p-4 text-sm">
+              <pre className="mt-2 overflow-x-auto rounded-md bg-muted p-4 font-mono text-sm">
                 <code>{`{\n  "results": {\n    "tree": { "found": true, "count": 1 },\n    "person": { "found": false, "count": 0 },\n    "bench": { "found": true, "count": 1 }\n  }\n}`}</code>
               </pre>
             </div>

@@ -120,20 +120,20 @@ export function ImageDescriber() {
   return (
     <div className="grid w-full max-w-6xl grid-cols-1 gap-8">
       <div className="grid w-full grid-cols-1 gap-8 lg:grid-cols-2">
-        <Card className="shadow-lg">
+        <Card>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <CardHeader>
-                <CardTitle className="font-headline flex items-center gap-3 text-3xl">
-                  <Sparkles className="h-8 w-8 text-primary" />
-                  ImageDescriber
+                <CardTitle className="font-headline flex items-center gap-3 text-2xl">
+                  <Sparkles className="h-6 w-6 text-primary" />
+                  Image Describer
                 </CardTitle>
                 <CardDescription>
                   Enter an image URL and your Gemini API key to get an
                   AI-generated description.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-4">
                 <FormField
                   control={form.control}
                   name="imageUrl"
@@ -228,7 +228,7 @@ export function ImageDescriber() {
           </Form>
         </Card>
 
-        <Card className="flex flex-col shadow-lg">
+        <Card className="flex flex-col">
           <CardHeader>
             <CardTitle>Result</CardTitle>
             <CardDescription>
@@ -276,10 +276,10 @@ export function ImageDescriber() {
         </Card>
       </div>
 
-      <Card className="shadow-lg">
+      <Card>
         <CardHeader>
-          <CardTitle className="font-headline flex items-center gap-3 text-2xl">
-            <Webhook className="h-7 w-7 text-primary" />
+          <CardTitle className="font-headline flex items-center gap-3 text-xl">
+            <Webhook className="h-6 w-6 text-primary" />
             API Endpoint Instructions
           </CardTitle>
           <CardDescription>
@@ -291,19 +291,19 @@ export function ImageDescriber() {
           <div className="space-y-4">
             <div>
               <p className="font-semibold">Endpoint</p>
-              <p className="text-sm text-muted-foreground">
+              <p className="font-mono text-sm text-muted-foreground">
                 POST /api/describe
               </p>
             </div>
             <div>
               <p className="font-semibold">Example Request (cURL)</p>
-              <pre className="mt-2 overflow-x-auto rounded-md bg-muted p-4 text-sm">
+              <pre className="mt-2 overflow-x-auto rounded-md bg-muted p-4 font-mono text-sm">
                 <code>{curlExample}</code>
               </pre>
             </div>
             <div>
               <p className="font-semibold">Successful Response</p>
-              <pre className="mt-2 overflow-x-auto rounded-md bg-muted p-4 text-sm">
+              <pre className="mt-2 overflow-x-auto rounded-md bg-muted p-4 font-mono text-sm">
                 <code>{`{\n  "description": "A detailed description of the image..."\n}`}</code>
               </pre>
             </div>
