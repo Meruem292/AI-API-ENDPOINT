@@ -13,7 +13,7 @@ import {z} from 'genkit';
 
 const GenerateImageDescriptionInputSchema = z.object({
   imageUrl: z.string().describe("A photo of a plant, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."),
-  apiKey: z.string().describe('The user-provided Gemini API key.'),
+  apiKey: z.string().min(1).describe('The user-provided Gemini API key.'),
 });
 export type GenerateImageDescriptionInput = z.infer<typeof GenerateImageDescriptionInputSchema>;
 
@@ -41,8 +41,6 @@ const prompt = ai.definePrompt({
   Focus on identifying key objects, scenes, and overall context within the image.
   Response must be a detailed paragraph.`, 
   config: {
-    // Note: safetySettings are not configurable by the user.
-    // It is the responsibility of the prompt creator to set reasonable settings.
     safetySettings: [
       {
         category: 'HARM_CATEGORY_HATE_SPEECH',
@@ -71,6 +69,8 @@ const generateImageDescriptionFlow = ai.defineFlow(
     outputSchema: GenerateImageDescriptionOutputSchema,
   },
   async input => {
+    // This pluginsConfig object ensures that ONLY the user-provided apiKey is used for this call.
+    // It overrides any default configuration.
     const {output} = await prompt(input, {
       pluginsConfig: {
         '@genkit-ai/google-genai': {

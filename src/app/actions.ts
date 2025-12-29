@@ -13,8 +13,11 @@ export async function getImageDescriptionAction(
   const imageUrl = formData.get('imageUrl') as string;
   const apiKey = formData.get('apiKey') as string;
 
-  if (!imageUrl || !apiKey) {
-    return { error: 'Image URL and API Key are required.' };
+  if (!imageUrl) {
+    return { error: 'Image data is missing.' };
+  }
+  if (!apiKey) {
+    return { error: 'API Key is required.' };
   }
 
   try {
