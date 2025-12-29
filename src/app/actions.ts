@@ -18,12 +18,6 @@ export async function getImageDescriptionAction(
   }
 
   try {
-    new URL(imageUrl);
-  } catch (_) {
-    return { error: 'Please enter a valid image URL.' };
-  }
-
-  try {
     const result = await generateImageDescription({ imageUrl, apiKey });
     return { description: result.description };
   } catch (e) {
@@ -36,7 +30,7 @@ export async function getImageDescriptionAction(
     }
     return {
       error:
-        'Failed to generate description. Please check that the image URL is correct and publicly accessible.',
+        'Failed to generate description. Please check that the image is valid and publicly accessible.',
     };
   }
 }

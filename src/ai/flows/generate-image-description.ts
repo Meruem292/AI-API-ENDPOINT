@@ -12,7 +12,7 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const GenerateImageDescriptionInputSchema = z.object({
-  imageUrl: z.string().describe('The URL of the image to describe.'),
+  imageUrl: z.string().describe("A photo of a plant, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."),
   apiKey: z.string().describe('The user-provided Gemini API key.'),
 });
 export type GenerateImageDescriptionInput = z.infer<typeof GenerateImageDescriptionInputSchema>;
@@ -34,7 +34,7 @@ const prompt = ai.definePrompt({
   output: {schema: GenerateImageDescriptionOutputSchema},
   prompt: `You are an AI vision expert that describes the contents of images.
 
-  Please analyze the image at the following URL and provide a detailed description of its contents:
+  Please analyze the image and provide a detailed description of its contents:
   
   {{media url=imageUrl}}
   

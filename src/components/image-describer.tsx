@@ -35,6 +35,20 @@ const formSchema = z.object({
   apiKey: z.string().min(1, { message: 'API key is required.' }),
 });
 
+async function urlToDataUri(url: string): Promise<string> {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error('Failed to fetch image.');
+  }
+  const blob = await response.blob();
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
 export function ImageDescriber() {
   const [description, setDescription] = useState<string>('');
   const [imageUrl, setImageUrl] = useState<string>(
@@ -51,25 +65,35 @@ export function ImageDescriber() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setImageUrl(values.imageUrl);
     setDescription('');
 
     startTransition(async () => {
-      const formData = new FormData();
-      formData.append('imageUrl', values.imageUrl);
-      formData.append('apiKey', values.apiKey);
+      try {
+        const dataUri = await urlToDataUri(values.imageUrl);
+        const formData = new FormData();
+        formData.append('imageUrl', dataUri);
+        formData.append('apiKey', values.apiKey);
 
-      const result = await getImageDescriptionAction(formData);
+        const result = await getImageDescriptionAction(formData);
 
-      if (result.error) {
+        if (result.error) {
+          toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: result.error,
+          });
+        } else if (result.description) {
+          setDescription(result.description);
+        }
+      } catch (error) {
         toast({
           variant: 'destructive',
-          title: 'Error',
-          description: result.error,
+          title: 'Image Error',
+          description:
+            'Could not load the image from the provided URL. Please check the URL and try again.',
         });
-      } else if (result.description) {
-        setDescription(result.description);
       }
     });
   }
