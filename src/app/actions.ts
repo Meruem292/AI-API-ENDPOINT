@@ -1,34 +1,43 @@
 'use server';
 
-import { generateImageDescription } from '@/ai/flows/generate-image-description';
+import {
+  generateImageDescriptionFlow,
+  GenerateImageDescriptionInputSchema,
+} from '@/ai/flows/generate-image-description';
+import { z } from 'zod';
 
 type ActionResult = {
   description?: string;
   error?: string;
 };
 
-export async function getImageDescriptionAction(
-  formData: FormData
-): Promise<ActionResult> {
-  const imageUrl = formData.get('imageUrl') as string;
-  const apiKey = formData.get('apiKey') as string;
+export type GenerateImageDescriptionInput = z.infer<
+  typeof GenerateImageDescriptionInputSchema
+>;
 
-  if (!imageUrl) {
+export async function getImageDescriptionAction(
+  input: GenerateImageDescriptionInput
+): Promise<ActionResult> {
+  if (!input.imageUrl) {
     return { error: 'Image data is missing.' };
   }
-  if (!apiKey) {
+  if (!input.apiKey) {
     return { error: 'API Key is required.' };
+  }
+  if (!input.model) {
+    return { error: 'Model is required.' };
   }
 
   try {
-    const result = await generateImageDescription({ imageUrl, apiKey });
+    const result = await generateImageDescriptionFlow(input);
     return { description: result.description };
   } catch (e) {
     const error = e as Error;
     console.error(error);
     if (error.message.includes('API key not valid')) {
       return {
-        error: 'Your Gemini API key appears to be invalid. Please check it and try again.',
+        error:
+          'Your Gemini API key appears to be invalid. Please check it and try again.',
       };
     }
     return {

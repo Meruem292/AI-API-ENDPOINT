@@ -5,7 +5,13 @@ import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { KeyRound, Sparkles, Image as ImageIcon, Loader2 } from 'lucide-react';
+import {
+  KeyRound,
+  Sparkles,
+  Image as ImageIcon,
+  Loader2,
+  Cpu,
+} from 'lucide-react';
 
 import { useToast } from '@/hooks/use-toast';
 import { getImageDescriptionAction } from '@/app/actions';
@@ -33,6 +39,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 const formSchema = z.object({
   imageUrl: z.string().url({ message: 'Please enter a valid image URL.' }),
   apiKey: z.string().min(1, { message: 'API key is required.' }),
+  model: z.string().min(1, { message: 'Model is required.' }),
 });
 
 async function urlToDataUri(url: string): Promise<string> {
@@ -62,6 +69,7 @@ export function ImageDescriber() {
     defaultValues: {
       imageUrl: '',
       apiKey: '',
+      model: 'gemini-2.5-flash-native-audio-dialog',
     },
   });
 
@@ -72,11 +80,12 @@ export function ImageDescriber() {
     startTransition(async () => {
       try {
         const dataUri = await urlToDataUri(values.imageUrl);
-        const formData = new FormData();
-        formData.append('imageUrl', dataUri);
-        formData.append('apiKey', values.apiKey);
-
-        const result = await getImageDescriptionAction(formData);
+        
+        const result = await getImageDescriptionAction({
+          imageUrl: dataUri,
+          apiKey: values.apiKey,
+          model: values.model,
+        });
 
         if (result.error) {
           toast({
@@ -90,9 +99,9 @@ export function ImageDescriber() {
       } catch (error) {
         toast({
           variant: 'destructive',
-          title: 'Image Error',
+          title: 'Error',
           description:
-            'Could not process the image from the provided URL. Please check the URL and try again.',
+            'Could not process the image. Please check that the URL is correct and publicly accessible.',
         });
       }
     });
@@ -146,6 +155,26 @@ export function ImageDescriber() {
                         <Input
                           type="password"
                           placeholder="Enter your API key"
+                          {...field}
+                          className="pl-10"
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="model"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Model</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Cpu className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                          placeholder="gemini-2.5-flash"
                           {...field}
                           className="pl-10"
                         />

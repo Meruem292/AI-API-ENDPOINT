@@ -3,9 +3,7 @@
 /**
  * @fileOverview Image description generation flow.
  *
- * - generateImageDescription - A function that generates a description of an image based on a provided URL and API key.
- * - GenerateImageDescriptionInput - The input type for the generateImageDescription function.
- * - GenerateImageDescriptionOutput - The return type for the generateImageDescription function.
+ * This file defines the Genkit flow responsible for generating an image description.
  */
 
 import {genkit} from 'genkit';
@@ -13,32 +11,21 @@ import {googleAI} from '@genkit-ai/google-genai';
 import {z} from 'zod';
 import {ai} from '@/ai/genkit';
 
-const GenerateImageDescriptionInputSchema = z.object({
+export const GenerateImageDescriptionInputSchema = z.object({
   imageUrl: z
     .string()
     .describe(
       "A photo of a plant, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."
     ),
   apiKey: z.string().min(1).describe('The user-provided Gemini API key.'),
+  model: z.string().min(1).describe('The user-provided Gemini model.'),
 });
-export type GenerateImageDescriptionInput = z.infer<
-  typeof GenerateImageDescriptionInputSchema
->;
 
-const GenerateImageDescriptionOutputSchema = z.object({
+export const GenerateImageDescriptionOutputSchema = z.object({
   description: z.string().describe('The generated description of the image.'),
 });
-export type GenerateImageDescriptionOutput = z.infer<
-  typeof GenerateImageDescriptionOutputSchema
->;
 
-export async function generateImageDescription(
-  input: GenerateImageDescriptionInput
-): Promise<GenerateImageDescriptionOutput> {
-  return generateImageDescriptionFlow(input);
-}
-
-const generateImageDescriptionFlow = ai.defineFlow(
+export const generateImageDescriptionFlow = ai.defineFlow(
   {
     name: 'generateImageDescriptionFlow',
     inputSchema: GenerateImageDescriptionInputSchema,
@@ -83,7 +70,7 @@ const generateImageDescriptionFlow = ai.defineFlow(
           },
         ],
       },
-      model: 'googleai/gemini-2.5-flash',
+      model: input.model,
     });
 
     const {output} = await prompt(input);
