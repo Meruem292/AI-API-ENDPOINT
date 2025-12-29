@@ -109,7 +109,7 @@ export function ImageDescriber() {
     });
   }
 
-  const curlExample = `curl -X POST https://<your-app-url>/api/describe \\
+  const curlExample = `curl -X POST https://ai-api-endpoint-eight.vercel.app/api/describe \\
 -H "Content-Type: application/json" \\
 -d '{
   "imageUrl": "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0",
