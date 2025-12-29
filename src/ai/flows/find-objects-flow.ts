@@ -93,8 +93,16 @@ export const findObjectsFlow = ai.defineFlow(
     }
     
     try {
-      // The model should return a raw JSON string. We parse it here.
-      const parsedOutput = JSON.parse(output as string);
+      // The model may return a raw JSON string or a string wrapped in markdown.
+      // We will attempt to extract the JSON part.
+      const rawOutput = output as string;
+      const jsonMatch = rawOutput.match(/(\{[\s\S]*\})/);
+      if (!jsonMatch) {
+        throw new Error('No JSON object found in the AI response.');
+      }
+      
+      const jsonString = jsonMatch[1];
+      const parsedOutput = JSON.parse(jsonString);
       return FindObjectsOutputSchema.parse(parsedOutput);
     } catch (e) {
       console.error('Failed to parse JSON from AI response:', e);
