@@ -34,7 +34,7 @@ export function ApiKeyWarningDialog() {
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogContent className="max-w-3xl">
         <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center gap-2 text-xl font-bold text-destructive">
+          <AlertDialogTitle className="flex items-center gap-2 text-xl font-bold">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -61,11 +61,11 @@ export function ApiKeyWarningDialog() {
                   testing and demonstration purposes.
                 </p>
 
-                <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4">
-                  <h3 className="font-bold text-destructive">
+                <div className="rounded-lg border border-border bg-muted/50 p-4">
+                  <h3 className="font-bold">
                     Important Security Warning
                   </h3>
-                  <p className="text-destructive/90">
+                  <p>
                     Your API key is a secret, similar to a password. Do NOT use a
                     production or paid API key for this tool.
                   </p>
@@ -95,7 +95,7 @@ export function ApiKeyWarningDialog() {
                 </div>
 
                 <div>
-                  <h3 className="font-bold text-primary">
+                  <h3 className="font-bold">
                     ✅ Recommended for Testing Only
                   </h3>
                   <ul className="list-disc space-y-1 pl-6 text-sm">
