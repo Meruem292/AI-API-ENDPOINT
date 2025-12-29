@@ -11,7 +11,7 @@ import {googleAI} from '@genkit-ai/google-genai';
 import {z} from 'zod';
 import {ai} from '@/ai/genkit';
 
-export const GenerateImageDescriptionInputSchema = z.object({
+const GenerateImageDescriptionInputSchema = z.object({
   imageUrl: z
     .string()
     .describe(
@@ -21,7 +21,7 @@ export const GenerateImageDescriptionInputSchema = z.object({
   model: z.string().min(1).describe('The user-provided Gemini model.'),
 });
 
-export const GenerateImageDescriptionOutputSchema = z.object({
+const GenerateImageDescriptionOutputSchema = z.object({
   description: z.string().describe('The generated description of the image.'),
 });
 
