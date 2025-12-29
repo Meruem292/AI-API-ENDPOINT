@@ -73,7 +73,7 @@ export function ImageDescriber() {
     defaultValues: {
       imageUrl: '',
       apiKey: '',
-      model: 'gemini-3-flash',
+      model: 'gemini-1.5-flash-latest',
     },
   });
 
@@ -178,15 +178,15 @@ export function ImageDescriber() {
                       <div className="relative">
                         <Cpu className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                         <Input
-                          placeholder="gemini-3-flash"
+                          placeholder="gemini-1.5-flash-latest"
                           {...field}
                           className="pl-10"
                         />
                       </div>
                     </FormControl>
                     <FormDescriptionComponent>
-                      Suggested: gemini-3-flash, gemini-pro-vision,
-                      gemini-2.5-flash
+                      Suggested: gemini-1.5-pro-latest, gemini-1.5-flash-latest,
+                      gemini-pro-vision
                     </FormDescriptionComponent>
                     <FormMessage />
                   </FormItem>
