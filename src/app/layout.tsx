@@ -1,8 +1,9 @@
 import type {Metadata} from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { Header } from '@/components/header';
-import { Inter } from 'next/font/google';
+import { ApiKeyWarningDialog } from '@/components/api-key-warning-dialog';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -17,11 +18,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable}`}>
+    <html lang="en" className={`${inter.variable} `}>
       <body className="font-body antialiased">
         <Header />
         {children}
         <Toaster />
+        <ApiKeyWarningDialog />
       </body>
     </html>
   );
