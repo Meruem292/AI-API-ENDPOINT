@@ -14,7 +14,10 @@ import {
 } from 'lucide-react';
 
 import { useToast } from '@/hooks/use-toast';
-import { getImageDescriptionAction } from '@/app/actions';
+import {
+  getImageDescriptionAction,
+  GenerateImageDescriptionInput,
+} from '@/app/actions';
 import {
   Card,
   CardContent,
@@ -69,7 +72,7 @@ export function ImageDescriber() {
     defaultValues: {
       imageUrl: '',
       apiKey: '',
-      model: 'gemini-2.5-flash-native-audio-dialog',
+      model: 'gemini-3-flash',
     },
   });
 
@@ -80,7 +83,7 @@ export function ImageDescriber() {
     startTransition(async () => {
       try {
         const dataUri = await urlToDataUri(values.imageUrl);
-        
+
         const result = await getImageDescriptionAction({
           imageUrl: dataUri,
           apiKey: values.apiKey,
