@@ -7,12 +7,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import {
   KeyRound,
-  Sparkles,
-  Image as ImageIcon,
+  ImageIcon,
   Loader2,
   Cpu,
   Search,
   Tag,
+  Webhook,
 } from 'lucide-react';
 
 import { useToast } from '@/hooks/use-toast';
@@ -42,7 +42,9 @@ import { Badge } from '@/components/ui/badge';
 
 const formSchema = z.object({
   imageUrl: z.string().url({ message: 'Please enter a valid image URL.' }),
-  objects: z.string().min(1, { message: 'Please enter at least one object to find.' }),
+  objects: z
+    .string()
+    .min(1, { message: 'Please enter at least one object to find.' }),
   apiKey: z.string().min(1, { message: 'API key is required.' }),
   model: z.string().min(1, { message: 'Model is required.' }),
 });
@@ -89,7 +91,10 @@ export function ObjectFinder() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setImageUrl(values.imageUrl);
     setResults(null);
-    const objectList = values.objects.split(',').map(s => s.trim()).filter(Boolean);
+    const objectList = values.objects
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean);
 
     if (objectList.length === 0) {
       form.setError('objects', { message: 'Please enter at least one object.' });
@@ -129,6 +134,15 @@ export function ObjectFinder() {
     });
   }
 
+  const curlExample = `curl -X POST https://ai-api-endpoint-eight.vercel.app/api/find-objects \\
+-H "Content-Type: application/json" \\
+-d '{
+  "imageUrl": "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0",
+  "objects": ["tree", "person", "bench"],
+  "apiKey": "YOUR_GEMINI_API_KEY",
+  "model": "gemini-2.5-flash"
+}'`;
+
   return (
     <div className="grid w-full max-w-6xl grid-cols-1 gap-8">
       <div className="grid w-full grid-cols-1 gap-8 lg:grid-cols-2">
@@ -141,7 +155,8 @@ export function ObjectFinder() {
                   ObjectFinder
                 </CardTitle>
                 <CardDescription>
-                  Find and count specific objects within an image using your Gemini API key.
+                  Find and count specific objects within an image using your
+                  Gemini API key.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -165,7 +180,7 @@ export function ObjectFinder() {
                     </FormItem>
                   )}
                 />
-                 <FormField
+                <FormField
                   control={form.control}
                   name="objects"
                   render={({ field }) => (
@@ -234,7 +249,7 @@ export function ObjectFinder() {
                           />
                         </div>
                       </FormControl>
-                       <FormDescriptionComponent>
+                      <FormDescriptionComponent>
                         gemini-2.5-flash, gemini-2.5-flash-lite,
                         gemini-robotics-er-1.5-preview
                       </FormDescriptionComponent>
@@ -301,11 +316,18 @@ export function ObjectFinder() {
                 ) : results ? (
                   <div className="flex flex-wrap gap-4">
                     {Object.entries(results).map(([key, value]) => (
-                      <div key={key} className="flex flex-col items-center gap-2 rounded-lg border p-3">
-                         <span className="font-medium capitalize">{key}</span>
-                         <Badge variant={value.found ? 'default' : 'destructive'}>
-                          {value.found ? `Found: ${value.count}`: 'Not Found'}
-                         </Badge>
+                      <div
+                        key={key}
+                        className="flex flex-col items-center gap-2 rounded-lg border p-3"
+                      >
+                        <span className="font-medium capitalize">{key}</span>
+                        <Badge
+                          variant={value.found ? 'default' : 'destructive'}
+                        >
+                          {value.found
+                            ? `Found: ${value.count}`
+                            : 'Not Found'}
+                        </Badge>
                       </div>
                     ))}
                   </div>
@@ -319,6 +341,41 @@ export function ObjectFinder() {
           </CardContent>
         </Card>
       </div>
+
+      <Card className="shadow-lg">
+        <CardHeader>
+          <CardTitle className="font-headline flex items-center gap-3 text-2xl">
+            <Webhook className="h-7 w-7 text-primary" />
+            API Endpoint Instructions
+          </CardTitle>
+          <CardDescription>
+            Use this feature programmatically by sending a POST request to the
+            following endpoint.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div>
+              <p className="font-semibold">Endpoint</p>
+              <p className="text-sm text-muted-foreground">
+                POST /api/find-objects
+              </p>
+            </div>
+            <div>
+              <p className="font-semibold">Example Request (cURL)</p>
+              <pre className="mt-2 overflow-x-auto rounded-md bg-muted p-4 text-sm">
+                <code>{curlExample}</code>
+              </pre>
+            </div>
+            <div>
+              <p className="font-semibold">Successful Response</p>
+              <pre className="mt-2 overflow-x-auto rounded-md bg-muted p-4 text-sm">
+                <code>{`{\n  "results": {\n    "tree": { "found": true, "count": 1 },\n    "person": { "found": false, "count": 0 },\n    "bench": { "found": true, "count": 1 }\n  }\n}`}</code>
+              </pre>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
