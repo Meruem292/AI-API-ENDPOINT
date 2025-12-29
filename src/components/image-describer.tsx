@@ -11,13 +11,11 @@ import {
   Image as ImageIcon,
   Loader2,
   Cpu,
+  Webhook,
 } from 'lucide-react';
 
 import { useToast } from '@/hooks/use-toast';
-import {
-  getImageDescriptionAction,
-  GenerateImageDescriptionInput,
-} from '@/app/actions';
+import { getImageDescriptionAction } from '@/app/actions';
 import {
   Card,
   CardContent,
@@ -111,158 +109,203 @@ export function ImageDescriber() {
     });
   }
 
-  return (
-    <div className="grid w-full max-w-6xl grid-cols-1 gap-8 lg:grid-cols-2">
-      <Card className="shadow-lg">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
-            <CardHeader>
-              <CardTitle className="font-headline flex items-center gap-3 text-3xl">
-                <Sparkles className="h-8 w-8 text-primary" />
-                ImageDescriber
-              </CardTitle>
-              <CardDescription>
-                Enter an image URL and your Gemini API key to get an
-                AI-generated description.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <FormField
-                control={form.control}
-                name="imageUrl"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Image URL</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <ImageIcon className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                          placeholder="https://example.com/image.png"
-                          {...field}
-                          className="pl-10"
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="apiKey"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      <a
-                        href="https://aistudio.google.com/api-keys"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="underline hover:text-primary"
-                      >
-                        Gemini API Key
-                      </a>
-                    </FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <KeyRound className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                          type="password"
-                          placeholder="Enter your API key"
-                          {...field}
-                          className="pl-10"
-                        />
-                      </div>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="model"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Model</FormLabel>
-                    <FormControl>
-                      <div className="relative">
-                        <Cpu className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                          placeholder="gemini-1.5-flash-latest"
-                          {...field}
-                          className="pl-10"
-                        />
-                      </div>
-                    </FormControl>
-                    <FormDescriptionComponent>
-                      Suggested: gemini-2.5-flash, gemini-2.5-flash-lite,
-                      gemini-robotics-er-1.5-preview
-                    </FormDescriptionComponent>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-            <CardFooter>
-              <Button type="submit" className="w-full" disabled={isPending}>
-                {isPending ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Generating...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="mr-2 h-4 w-4" />
-                    Generate Description
-                  </>
-                )}
-              </Button>
-            </CardFooter>
-          </form>
-        </Form>
-      </Card>
+  const curlExample = `curl -X POST https://<your-app-url>/api/describe \\
+-H "Content-Type: application/json" \\
+-d '{
+  "imageUrl": "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0",
+  "apiKey": "YOUR_GEMINI_API_KEY",
+  "model": "gemini-2.5-flash"
+}'`;
 
-      <Card className="flex flex-col shadow-lg">
+  return (
+    <div className="grid w-full max-w-6xl grid-cols-1 gap-8">
+      <div className="grid w-full grid-cols-1 gap-8 lg:grid-cols-2">
+        <Card className="shadow-lg">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <CardHeader>
+                <CardTitle className="font-headline flex items-center gap-3 text-3xl">
+                  <Sparkles className="h-8 w-8 text-primary" />
+                  ImageDescriber
+                </CardTitle>
+                <CardDescription>
+                  Enter an image URL and your Gemini API key to get an
+                  AI-generated description.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <FormField
+                  control={form.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Image URL</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <ImageIcon className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                          <Input
+                            placeholder="https://example.com/image.png"
+                            {...field}
+                            className="pl-10"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="apiKey"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        <a
+                          href="https://aistudio.google.com/api-keys"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline hover:text-primary"
+                        >
+                          Gemini API Key
+                        </a>
+                      </FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <KeyRound className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                          <Input
+                            type="password"
+                            placeholder="Enter your API key"
+                            {...field}
+                            className="pl-10"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="model"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Model</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Cpu className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                          <Input
+                            placeholder="gemini-1.5-flash-latest"
+                            {...field}
+                            className="pl-10"
+                          />
+                        </div>
+                      </FormControl>
+                      <FormDescriptionComponent>
+                        Suggested: gemini-2.5-flash, gemini-2.5-flash-lite,
+                        gemini-robotics-er-1.5-preview
+                      </FormDescriptionComponent>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+              <CardFooter>
+                <Button type="submit" className="w-full" disabled={isPending}>
+                  {isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="mr-2 h-4 w-4" />
+                      Generate Description
+                    </>
+                  )}
+                </Button>
+              </CardFooter>
+            </form>
+          </Form>
+        </Card>
+
+        <Card className="flex flex-col shadow-lg">
+          <CardHeader>
+            <CardTitle>Result</CardTitle>
+            <CardDescription>
+              The image and its generated description will appear here.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-grow flex-col gap-4">
+            <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-muted">
+              <Image
+                key={imageUrl}
+                src={imageUrl}
+                alt="Image to be described"
+                fill
+                className="object-contain"
+                data-ai-hint={PlaceHolderImages[0].imageHint}
+                onError={() => {
+                  setImageUrl(PlaceHolderImages[0].imageUrl);
+                  toast({
+                    variant: 'destructive',
+                    title: 'Image Error',
+                    description:
+                      'Could not load the image from the provided URL.',
+                  });
+                }}
+              />
+            </div>
+            <div className="flex-grow space-y-2">
+              <h3 className="text-lg font-semibold">Description</h3>
+              <div className="max-w-none text-muted-foreground">
+                {isPending ? (
+                  <div className="space-y-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-[80%]" />
+                  </div>
+                ) : (
+                  <p className="text-sm">
+                    {description ||
+                      'The generated description will appear here once you submit an image URL and API key.'}
+                  </p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card className="shadow-lg">
         <CardHeader>
-          <CardTitle>Result</CardTitle>
+          <CardTitle className="font-headline flex items-center gap-3 text-2xl">
+            <Webhook className="h-7 w-7 text-primary" />
+            API Endpoint Instructions
+          </CardTitle>
           <CardDescription>
-            The image and its generated description will appear here.
+            Use this application programmatically by sending a POST request to
+            the following endpoint.
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex flex-grow flex-col gap-4">
-          <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-muted">
-            <Image
-              key={imageUrl}
-              src={imageUrl}
-              alt="Image to be described"
-              fill
-              className="object-contain"
-              data-ai-hint={PlaceHolderImages[0].imageHint}
-              onError={() => {
-                setImageUrl(PlaceHolderImages[0].imageUrl);
-                toast({
-                  variant: 'destructive',
-                  title: 'Image Error',
-                  description:
-                    'Could not load the image from the provided URL.',
-                });
-              }}
-            />
-          </div>
-          <div className="flex-grow space-y-2">
-            <h3 className="text-lg font-semibold">Description</h3>
-            <div className="max-w-none text-muted-foreground">
-              {isPending ? (
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-full" />
-                  <Skeleton className="h-4 w-[80%]" />
-                </div>
-              ) : (
-                <p className="text-sm">
-                  {description ||
-                    'The generated description will appear here once you submit an image URL and API key.'}
-                </p>
-              )}
+        <CardContent>
+          <div className="space-y-4">
+            <div>
+              <p className="font-semibold">Endpoint</p>
+              <p className="text-sm text-muted-foreground">
+                POST /api/describe
+              </p>
+            </div>
+            <div>
+              <p className="font-semibold">Example Request (cURL)</p>
+              <pre className="mt-2 overflow-x-auto rounded-md bg-muted p-4 text-sm">
+                <code>{curlExample}</code>
+              </pre>
+            </div>
+            <div>
+              <p className="font-semibold">Successful Response</p>
+              <pre className="mt-2 overflow-x-auto rounded-md bg-muted p-4 text-sm">
+                <code>{`{\n  "description": "A detailed description of the image..."\n}`}</code>
+              </pre>
             </div>
           </div>
         </CardContent>
