@@ -6,6 +6,7 @@ import {
 import {
   findObjectsFlow,
 } from '@/ai/flows/find-objects-flow';
+import { getCounter } from '@/lib/firebase/firestore';
 import { z } from 'zod';
 
 // Types for Image Description
@@ -108,4 +109,15 @@ export async function findObjectsAction(
       error: `Failed to find objects: ${error.message}`,
     };
   }
+}
+
+export async function getApiUsageCount(counterId: 'imageDescriber' | 'objectFinder'): Promise<{ count: number; error?: string }> {
+    try {
+        const count = await getCounter(counterId);
+        return { count };
+    } catch (e) {
+        const error = e as Error;
+        console.error(error);
+        return { count: 0, error: `Failed to get API usage count: ${error.message}` };
+    }
 }

@@ -10,6 +10,7 @@ import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/google-genai';
 import {z} from 'zod';
 import {ai} from '@/ai/genkit';
+import { incrementCounter } from '@/lib/firebase/firestore';
 
 const GenerateImageDescriptionInputSchema = z.object({
   imageUrl: z
@@ -74,6 +75,11 @@ export const generateImageDescriptionFlow = ai.defineFlow(
     });
 
     const {output} = await prompt(input);
+    
+    if(output){
+        await incrementCounter('imageDescriber');
+    }
+
     return output!;
   }
 );

@@ -10,6 +10,7 @@ import { genkit } from 'genkit';
 import { googleAI } from '@genkit-ai/google-genai';
 import { z } from 'zod';
 import { ai } from '@/ai/genkit';
+import { incrementCounter } from '@/lib/firebase/firestore';
 
 const FindObjectsInputSchema = z.object({
   imageUrl: z
@@ -91,6 +92,10 @@ export const findObjectsFlow = ai.defineFlow(
 
     if (!output) {
       throw new Error('The AI returned an empty response.');
+    }
+
+    if (output) {
+      await incrementCounter('objectFinder');
     }
 
     return FindObjectsOutputSchema.parse(output);

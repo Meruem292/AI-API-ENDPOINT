@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 
 import { useToast } from '@/hooks/use-toast';
-import { findObjectsAction } from '@/app/actions';
+import { findObjectsAction, getApiUsageCount } from '@/app/actions';
 import {
   Card,
   CardContent,
@@ -76,7 +76,16 @@ export function ObjectFinder() {
     PlaceHolderImages[0].imageUrl
   );
   const [isPending, startTransition] = useTransition();
+  const [apiCallCount, setApiCallCount] = useState<number | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    async function fetchCount() {
+      const { count } = await getApiUsageCount('objectFinder');
+      setApiCallCount(count);
+    }
+    fetchCount();
+  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -121,6 +130,7 @@ export function ObjectFinder() {
           });
         } else if (result.results) {
           setResults(result.results);
+          setApiCallCount((prev) => (prev !== null ? prev + 1 : 1));
         }
       } catch (error) {
         toast({
@@ -156,6 +166,11 @@ export function ObjectFinder() {
                 <CardDescription>
                   Find and count specific objects within an image using your
                   Gemini API key.
+                  {apiCallCount !== null && (
+                    <span className="block text-xs text-muted-foreground mt-1">
+                      Count: {apiCallCount}
+                    </span>
+                  )}
                 </CardDescription>
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="item-1">
@@ -283,10 +298,7 @@ export function ObjectFinder() {
               <CardFooter>
                 <Button type="submit" className="w-full" disabled={isPending}>
                   {isPending ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Finding Objects...
-                    </>
+                    'Finding Objects...'
                   ) : (
                     'Find Objects'
                   )}

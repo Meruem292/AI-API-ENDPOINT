@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 
 import { useToast } from '@/hooks/use-toast';
-import { getImageDescriptionAction } from '@/app/actions';
+import { getImageDescriptionAction, getApiUsageCount } from '@/app/actions';
 import {
   Card,
   CardContent,
@@ -65,7 +65,16 @@ export function ImageDescriber() {
     PlaceHolderImages[0].imageUrl
   );
   const [isPending, startTransition] = useTransition();
+  const [apiCallCount, setApiCallCount] = useState<number | null>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    async function fetchCount() {
+      const { count } = await getApiUsageCount('imageDescriber');
+      setApiCallCount(count);
+    }
+    fetchCount();
+  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -98,6 +107,7 @@ export function ImageDescriber() {
           });
         } else if (result.description) {
           setDescription(result.description);
+          setApiCallCount((prev) => (prev !== null ? prev + 1 : 1));
         }
       } catch (error) {
         toast({
@@ -131,6 +141,11 @@ export function ImageDescriber() {
                 <CardDescription>
                   Enter an image URL and your Gemini API key to get an
                   AI-generated description.
+                  {apiCallCount !== null && (
+                    <span className="block text-xs text-muted-foreground mt-1">
+                      Count: {apiCallCount}
+                    </span>
+                  )}
                 </CardDescription>
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="item-1">
@@ -239,10 +254,7 @@ export function ImageDescriber() {
               <CardFooter>
                 <Button type="submit" className="w-full" disabled={isPending}>
                   {isPending ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Generating...
-                    </>
+                    'Generating...'
                   ) : (
                     'Generate Description'
                   )}
