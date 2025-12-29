@@ -70,7 +70,7 @@ export const generateImageDescriptionFlow = ai.defineFlow(
           },
         ],
       },
-      model: input.model,
+      model: `googleai/${input.model}`,
     });
 
     const {output} = await prompt(input);
