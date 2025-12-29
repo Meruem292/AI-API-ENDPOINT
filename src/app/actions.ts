@@ -4,9 +4,13 @@ import {
   generateImageDescriptionFlow,
   GenerateImageDescriptionInputSchema,
 } from '@/ai/flows/generate-image-description';
+import {
+  findObjectsFlow,
+} from '@/ai/flows/find-objects-flow';
 import { z } from 'zod';
 
-type ActionResult = {
+// Types for Image Description
+type ImageDescriptionResult = {
   description?: string;
   error?: string;
 };
@@ -17,7 +21,7 @@ export type GenerateImageDescriptionInput = z.infer<
 
 export async function getImageDescriptionAction(
   input: GenerateImageDescriptionInput
-): Promise<ActionResult> {
+): Promise<ImageDescriptionResult> {
   if (!input.imageUrl) {
     return { error: 'Image data is missing.' };
   }
@@ -42,6 +46,60 @@ export async function getImageDescriptionAction(
     }
     return {
       error: `Failed to generate description: ${error.message}`,
+    };
+  }
+}
+
+// Types for Object Finder
+const FindObjectsInputSchema = z.object({
+  imageUrl: z.string(),
+  objects: z.array(z.string()),
+  apiKey: z.string(),
+  model: z.string(),
+});
+
+export type FindObjectsInput = z.infer<typeof FindObjectsInputSchema>;
+
+type ObjectFinderResult = {
+  results?: {
+    [key: string]: {
+      found: boolean;
+      count: number;
+    };
+  };
+  error?: string;
+};
+
+export async function findObjectsAction(
+  input: FindObjectsInput
+): Promise<ObjectFinderResult> {
+  if (!input.imageUrl) {
+    return { error: 'Image data is missing.' };
+  }
+  if (!input.apiKey) {
+    return { error: 'API Key is required.' };
+  }
+  if (!input.model) {
+    return { error: 'Model is required.' };
+  }
+  if (!input.objects || input.objects.length === 0) {
+    return { error: 'Please provide at least one object to find.' };
+  }
+
+  try {
+    const result = await findObjectsFlow(input);
+    return { results: result.results };
+  } catch (e) {
+    const error = e as Error;
+    console.error(error);
+    if (error.message.includes('API key not valid')) {
+      return {
+        error:
+          'Your Gemini API key appears to be invalid. Please check it and try again.',
+      };
+    }
+    return {
+      error: `Failed to find objects: ${error.message}`,
     };
   }
 }
