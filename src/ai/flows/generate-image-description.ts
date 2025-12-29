@@ -83,6 +83,7 @@ const generateImageDescriptionFlow = ai.defineFlow(
           },
         ],
       },
+      model: 'googleai/gemini-pro-vision',
     });
 
     const {output} = await prompt(input);
