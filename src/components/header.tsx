@@ -2,15 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Sparkles, Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function Header() {
   const pathname = usePathname();
 
   const navLinks = [
-    { href: '/', label: 'Image Describer', icon: <Sparkles className="h-4 w-4" /> },
-    { href: '/find-objects', label: 'Object Finder', icon: <Search className="h-4 w-4" /> },
+    { href: '/', label: 'Image Describer' },
+    { href: '/find-objects', label: 'Object Finder' },
   ];
 
   return (
@@ -22,11 +21,10 @@ export function Header() {
               key={link.href}
               href={link.href}
               className={cn(
-                'flex items-center gap-2 transition-colors hover:text-foreground',
+                'transition-colors hover:text-foreground',
                 pathname === link.href ? 'text-foreground' : 'text-muted-foreground'
               )}
             >
-              {link.icon}
               {link.label}
             </Link>
           ))}

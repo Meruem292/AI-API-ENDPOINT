@@ -6,14 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import {
-  KeyRound,
-  ImageIcon,
   Loader2,
-  Cpu,
-  Search,
-  Tag,
-  Webhook,
-  AlertTriangle,
 } from 'lucide-react';
 
 import { useToast } from '@/hooks/use-toast';
@@ -157,8 +150,7 @@ export function ObjectFinder() {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
               <CardHeader>
-                <CardTitle className="font-headline flex items-center gap-3 text-2xl">
-                  <Search className="h-6 w-6 text-primary" />
+                <CardTitle className="font-headline text-2xl">
                   Object Finder
                 </CardTitle>
                 <CardDescription>
@@ -168,9 +160,8 @@ export function ObjectFinder() {
                 <Accordion type="single" collapsible className="w-full">
                   <AccordionItem value="item-1">
                     <AccordionTrigger>
-                      <div className="flex items-center gap-2 text-sm font-semibold">
-                        <AlertTriangle className="h-4 w-4" /> Important: API Key
-                        Usage
+                      <div className="text-sm font-semibold">
+                        Important: API Key Usage
                       </div>
                     </AccordionTrigger>
                     <AccordionContent>
@@ -214,14 +205,10 @@ export function ObjectFinder() {
                     <FormItem>
                       <FormLabel>Image URL</FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <ImageIcon className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-                          <Input
-                            placeholder="https://example.com/image.png"
-                            {...field}
-                            className="pl-10"
-                          />
-                        </div>
+                        <Input
+                          placeholder="https://example.com/image.png"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -234,14 +221,10 @@ export function ObjectFinder() {
                     <FormItem>
                       <FormLabel>Objects to Find</FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Tag className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-                          <Input
-                            placeholder="e.g., car, person, dog"
-                            {...field}
-                            className="pl-10"
-                          />
-                        </div>
+                        <Input
+                          placeholder="e.g., car, person, dog"
+                          {...field}
+                        />
                       </FormControl>
                       <FormDescriptionComponent>
                         Enter a comma-separated list of objects.
@@ -266,15 +249,11 @@ export function ObjectFinder() {
                         </a>
                       </FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <KeyRound className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-                          <Input
-                            type="password"
-                            placeholder="Enter your API key"
-                            {...field}
-                            className="pl-10"
-                          />
-                        </div>
+                        <Input
+                          type="password"
+                          placeholder="Enter your API key"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -287,14 +266,10 @@ export function ObjectFinder() {
                     <FormItem>
                       <FormLabel>Model</FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Cpu className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
-                          <Input
-                            placeholder="gemini-2.5-flash"
-                            {...field}
-                            className="pl-10"
-                          />
-                        </div>
+                        <Input
+                          placeholder="gemini-2.5-flash"
+                          {...field}
+                        />
                       </FormControl>
                       <FormDescriptionComponent>
                         gemini-2.5-flash, gemini-2.5-flash-lite,
@@ -313,10 +288,7 @@ export function ObjectFinder() {
                       Finding Objects...
                     </>
                   ) : (
-                    <>
-                      <Search className="mr-2 h-4 w-4" />
-                      Find Objects
-                    </>
+                    'Find Objects'
                   )}
                 </Button>
               </CardFooter>
@@ -392,8 +364,7 @@ export function ObjectFinder() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="font-headline flex items-center gap-3 text-xl">
-            <Webhook className="h-6 w-6 text-primary" />
+          <CardTitle className="font-headline text-xl">
             API Endpoint Instructions
           </CardTitle>
           <CardDescription>
