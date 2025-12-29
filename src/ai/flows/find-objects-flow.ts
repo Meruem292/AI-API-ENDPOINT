@@ -53,7 +53,7 @@ export const findObjectsFlow = ai.defineFlow(
 
       Analyze the image provided and determine if the following objects are present: {{#each objects}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}.
 
-      Respond with ONLY a valid JSON string. Do not include any other text or markdown formatting.
+      Respond with ONLY a valid JSON object. Do not include any other text or markdown formatting.
       The JSON object should have a single key "results". The value of "results" should be an object where each key is an object name you were asked to find.
       For each object name, the value should be an object with two keys: "found" (a boolean) and "count" (a number).
 
@@ -64,6 +64,7 @@ export const findObjectsFlow = ai.defineFlow(
       {{media url=imageUrl}}
       `,
       config: {
+        response_mime_type: 'application/json',
         safetySettings: [
           {
             category: 'HARM_CATEGORY_HATE_SPEECH',
@@ -91,23 +92,7 @@ export const findObjectsFlow = ai.defineFlow(
     if (!output) {
       throw new Error('The AI returned an empty response.');
     }
-    
-    try {
-      // The model may return a raw JSON string or a string wrapped in markdown.
-      // We will attempt to extract the JSON part.
-      const rawOutput = output as string;
-      const jsonMatch = rawOutput.match(/(\{[\s\S]*\})/);
-      if (!jsonMatch) {
-        throw new Error(`No JSON object found in the AI response. Raw response: ${rawOutput}`);
-      }
-      
-      const jsonString = jsonMatch[1];
-      const parsedOutput = JSON.parse(jsonString);
-      return FindObjectsOutputSchema.parse(parsedOutput);
-    } catch (e: any) {
-      console.error('Failed to parse JSON from AI response:', e);
-      console.error('Raw AI Output:', output);
-      throw new Error(`The AI returned an invalid JSON response. Raw response: ${output as string}`);
-    }
+
+    return FindObjectsOutputSchema.parse(output);
   }
 );

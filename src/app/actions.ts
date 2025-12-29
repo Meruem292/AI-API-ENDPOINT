@@ -47,7 +47,7 @@ export async function getImageDescriptionAction(
     if (error.message.includes('API key not valid')) {
       return {
         error:
-          'Your Gemini API key appears to be invalid. Please check it and try again.',
+          'Your Gemini API key appears to be be invalid. Please check it and try again.',
       };
     }
     return {
@@ -101,12 +101,7 @@ export async function findObjectsAction(
     if (error.message.includes('API key not valid')) {
       return {
         error:
-          'Your Gemini API key appears to be invalid. Please check it and try again.',
-      };
-    }
-    if (error.message.includes('invalid JSON response')) {
-       return {
-        error: `The AI returned an invalid response. Please try again. Raw response: ${error.message.substring(error.message.indexOf("Raw response:"))}`,
+          'Your Gemini API key appears to be be invalid. Please check it and try again.',
       };
     }
     return {
