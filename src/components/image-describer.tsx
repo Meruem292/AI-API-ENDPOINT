@@ -71,7 +71,7 @@ export function ImageDescriber() {
     defaultValues: {
       imageUrl: '',
       apiKey: '',
-      model: 'gemini-1.5-flash-latest',
+      model: 'gemini-2.5-flash',
     },
   });
 
@@ -114,7 +114,7 @@ export function ImageDescriber() {
 -d '{
   "imageUrl": "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0",
   "apiKey": "YOUR_GEMINI_API_KEY",
-  "model": "gemini-1.5-flash-latest"
+  "model": "gemini-2.5-flash"
 }'`;
 
   return (
@@ -194,14 +194,15 @@ export function ImageDescriber() {
                         <div className="relative">
                           <Cpu className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                           <Input
-                            placeholder="gemini-1.5-flash-latest"
+                            placeholder="gemini-2.5-flash"
                             {...field}
                             className="pl-10"
                           />
                         </div>
                       </FormControl>
                       <FormDescriptionComponent>
-                        Suggested: gemini-1.5-flash-latest, gemini-1.5-pro-latest
+                        gemini-2.5-flash, gemini-2.5-flash-lite,
+                        gemini-robotics-er-1.5-preview
                       </FormDescriptionComponent>
                       <FormMessage />
                     </FormItem>

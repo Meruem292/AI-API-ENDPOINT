@@ -82,7 +82,7 @@ export function ObjectFinder() {
       imageUrl: '',
       objects: '',
       apiKey: '',
-      model: 'gemini-1.5-flash-latest',
+      model: 'gemini-2.5-flash',
     },
   });
 
@@ -228,14 +228,15 @@ export function ObjectFinder() {
                         <div className="relative">
                           <Cpu className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                           <Input
-                            placeholder="gemini-1.5-flash-latest"
+                            placeholder="gemini-2.5-flash"
                             {...field}
                             className="pl-10"
                           />
                         </div>
                       </FormControl>
                        <FormDescriptionComponent>
-                        Suggested: gemini-1.5-flash-latest, gemini-1.5-pro-latest
+                        gemini-2.5-flash, gemini-2.5-flash-lite,
+                        gemini-robotics-er-1.5-preview
                       </FormDescriptionComponent>
                       <FormMessage />
                     </FormItem>
