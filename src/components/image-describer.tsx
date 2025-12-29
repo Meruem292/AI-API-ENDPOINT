@@ -152,7 +152,16 @@ export function ImageDescriber() {
                 name="apiKey"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Gemini API Key</FormLabel>
+                    <FormLabel>
+                      <a
+                        href="https://aistudio.google.com/api-keys"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline hover:text-primary"
+                      >
+                        Gemini API Key
+                      </a>
+                    </FormLabel>
                     <FormControl>
                       <div className="relative">
                         <KeyRound className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
