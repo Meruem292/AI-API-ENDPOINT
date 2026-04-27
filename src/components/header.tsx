@@ -10,6 +10,7 @@ export function Header() {
   const navLinks = [
     { href: '/', label: 'Image Describer' },
     { href: '/find-objects', label: 'Object Finder' },
+    { href: '/image-qa', label: 'Image Q&A' },
   ];
 
   return (

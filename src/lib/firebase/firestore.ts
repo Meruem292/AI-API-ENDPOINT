@@ -12,7 +12,7 @@ import {
 
 const countersCollection = collection(db, 'apiUsageCounters');
 
-export async function incrementCounter(counterId: 'imageDescriber' | 'objectFinder') {
+export async function incrementCounter(counterId: 'imageDescriber' | 'objectFinder' | 'imageQa') {
   const counterRef = doc(countersCollection, counterId);
 
   try {
@@ -33,7 +33,7 @@ export async function incrementCounter(counterId: 'imageDescriber' | 'objectFind
   }
 }
 
-export async function getCounter(counterId: 'imageDescriber' | 'objectFinder'): Promise<number> {
+export async function getCounter(counterId: 'imageDescriber' | 'objectFinder' | 'imageQa'): Promise<number> {
   const counterRef = doc(countersCollection, counterId);
   try {
     const counterDoc = await getDoc(counterRef);

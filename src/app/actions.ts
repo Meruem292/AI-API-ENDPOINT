@@ -6,6 +6,7 @@ import {
 import {
   findObjectsFlow,
 } from '@/ai/flows/find-objects-flow';
+import { imageQaFlow } from '@/ai/flows/image-qa-flow';
 import { getCounter } from '@/lib/firebase/firestore';
 import { z } from 'zod';
 
@@ -113,7 +114,63 @@ export async function findObjectsAction(
   }
 }
 
-export async function getApiUsageCount(counterId: 'imageDescriber' | 'objectFinder'): Promise<{ count: number; error?: string }> {
+// Types for Image Q&A
+const ImageQaInputSchema = z.object({
+  imageUrl: z.string(),
+  prompt: z.string(),
+  apiKey: z.string(),
+  model: z.string(),
+});
+
+export type ImageQaInput = z.infer<typeof ImageQaInputSchema>;
+
+type ImageQaResult = {
+  jsonResponse?: string;
+  error?: string;
+};
+
+export async function imageQaAction(
+  input: ImageQaInput
+): Promise<ImageQaResult> {
+  if (!input.imageUrl) {
+    return { error: 'Image data is missing.' };
+  }
+  if (!input.prompt) {
+    return { error: 'Prompt is required.' };
+  }
+  if (!input.apiKey) {
+    return { error: 'API Key is required.' };
+  }
+  if (!input.model) {
+    return { error: 'Model is required.' };
+  }
+
+  try {
+    const result = await imageQaFlow(input);
+    return { jsonResponse: result.jsonResponse };
+  } catch (e) {
+    const error = e as Error;
+    console.error(error);
+    if (error.message.includes('API key not valid')) {
+      return {
+        error:
+          'Your Gemini API key appears to be be invalid. Please check it and try again.',
+      };
+    }
+    // A more generic error for parsing or other AI issues
+    if (error.message.includes('The AI returned an empty response')) {
+         return {
+              error: 'The AI returned an empty or invalid response. Please check your prompt and try again.',
+         };
+    }
+
+    return {
+      error: `Failed to get a response: ${error.message}`,
+    };
+  }
+}
+
+export async function getApiUsageCount(counterId: 'imageDescriber' | 'objectFinder' | 'imageQa'): Promise<{ count: number; error?: string }> {
     try {
         const count = await getCounter(counterId);
         return { count };
