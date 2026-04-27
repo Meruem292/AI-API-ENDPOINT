@@ -205,7 +205,7 @@ export function ImageQa() {
                     <FormLabel>Your Question / Prompt</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="e.g., How many cars are in this image? Respond in JSON like {\"carCount\": N}"
+                        placeholder={'e.g., How many cars are in this image? Respond in JSON like {"carCount": N}'}
                         rows={6}
                         {...field}
                       />
