@@ -21,6 +21,7 @@ const FindObjectsInputSchema = z.object({
   objects: z.array(z.string()).describe('An array of object names to find.'),
   apiKey: z.string().min(1).describe('The user-provided Gemini API key.'),
   model: z.string().min(1).describe('The user-provided Gemini model.'),
+  prompt: z.string().optional().describe('An optional custom prompt.'),
 });
 
 const FindObjectsOutputSchema = z.object({
@@ -47,10 +48,7 @@ export const findObjectsFlow = ai.defineFlow(
       plugins: [googleAI({ apiKey: input.apiKey })],
     });
 
-    const prompt = customAi.definePrompt({
-      name: 'findObjectsPrompt',
-      input: { schema: FindObjectsInputSchema },
-      prompt: `You are an AI vision expert that finds objects in images.
+    const defaultPrompt = `You are an AI vision expert that finds objects in images.
 
       Analyze the image provided and determine if the following objects are present: {{#each objects}}{{{this}}}{{#unless @last}}, {{/unless}}{{/each}}.
 
@@ -63,7 +61,14 @@ export const findObjectsFlow = ai.defineFlow(
 
       Image:
       {{media url=imageUrl}}
-      `,
+      `;
+
+    const promptText = input.prompt || defaultPrompt;
+
+    const prompt = customAi.definePrompt({
+      name: 'findObjectsPrompt',
+      input: { schema: FindObjectsInputSchema },
+      prompt: promptText,
       config: {
         response_mime_type: 'application/json',
         safetySettings: [

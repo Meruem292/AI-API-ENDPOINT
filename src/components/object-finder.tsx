@@ -5,9 +5,6 @@ import Image from 'next/image';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import {
-  Loader2,
-} from 'lucide-react';
 
 import { useToast } from '@/hooks/use-toast';
 import { findObjectsAction, getApiUsageCount } from '@/app/actions';
@@ -39,6 +36,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { Textarea } from './ui/textarea';
 
 const formSchema = z.object({
   imageUrl: z.string().url({ message: 'Please enter a valid image URL.' }),
@@ -47,6 +45,7 @@ const formSchema = z.object({
     .min(1, { message: 'Please enter at least one object to find.' }),
   apiKey: z.string().min(1, { message: 'API key is required.' }),
   model: z.string().min(1, { message: 'Model is required.' }),
+  prompt: z.string().optional(),
 });
 
 async function urlToDataUri(url: string): Promise<string> {
@@ -94,6 +93,7 @@ export function ObjectFinder() {
       objects: '',
       apiKey: '',
       model: 'gemini-2.5-flash',
+      prompt: '',
     },
   });
 
@@ -119,6 +119,7 @@ export function ObjectFinder() {
           objects: objectList,
           apiKey: values.apiKey,
           model: values.model,
+          prompt: values.prompt,
         });
 
         if (result.error) {
@@ -294,6 +295,38 @@ export function ObjectFinder() {
                     </FormItem>
                   )}
                 />
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="advanced-options">
+                    <AccordionTrigger>
+                      <div className="text-sm font-semibold">
+                        Advanced Options
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <FormField
+                        control={form.control}
+                        name="prompt"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Custom Prompt</FormLabel>
+                            <FormControl>
+                              <Textarea
+                                placeholder="e.g., Focus only on objects on the table. Respond in JSON."
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormDescriptionComponent>
+                              Optional. If you leave this blank, a default prompt will
+                              be used. Your prompt should instruct the AI to return a
+                              JSON object with a specific structure.
+                            </FormDescriptionComponent>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               </CardContent>
               <CardFooter>
                 <Button type="submit" className="w-full" disabled={isPending}>

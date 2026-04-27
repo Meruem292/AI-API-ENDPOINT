@@ -14,6 +14,7 @@ const GenerateImageDescriptionInputSchema = z.object({
   imageUrl: z.string(),
   apiKey: z.string(),
   model: z.string(),
+  prompt: z.string().optional(),
 });
 
 
@@ -63,6 +64,7 @@ const FindObjectsInputSchema = z.object({
   objects: z.array(z.string()),
   apiKey: z.string(),
   model: z.string(),
+  prompt: z.string().optional(),
 });
 
 export type FindObjectsInput = z.infer<typeof FindObjectsInputSchema>;

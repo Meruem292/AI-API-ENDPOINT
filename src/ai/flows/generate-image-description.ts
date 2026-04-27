@@ -20,6 +20,7 @@ const GenerateImageDescriptionInputSchema = z.object({
     ),
   apiKey: z.string().min(1).describe('The user-provided Gemini API key.'),
   model: z.string().min(1).describe('The user-provided Gemini model.'),
+  prompt: z.string().optional().describe('An optional custom prompt.'),
 });
 
 const GenerateImageDescriptionOutputSchema = z.object({
@@ -39,18 +40,22 @@ export const generateImageDescriptionFlow = ai.defineFlow(
       plugins: [googleAI({apiKey: input.apiKey})],
     });
 
-    const prompt = customAi.definePrompt({
-      name: 'generateImageDescriptionPrompt',
-      input: {schema: GenerateImageDescriptionInputSchema},
-      output: {schema: GenerateImageDescriptionOutputSchema},
-      prompt: `You are an AI vision expert that describes the contents of images.
+    const defaultPrompt = `You are an AI vision expert that describes the contents of images.
     
       Please analyze the image and provide a detailed description of its contents:
       
       {{media url=imageUrl}}
       
       Focus on identifying key objects, scenes, and overall context within the image.
-      Response must be a detailed paragraph.`,
+      Response must be a detailed paragraph.`;
+
+    const promptText = input.prompt || defaultPrompt;
+
+    const prompt = customAi.definePrompt({
+      name: 'generateImageDescriptionPrompt',
+      input: {schema: GenerateImageDescriptionInputSchema},
+      output: {schema: GenerateImageDescriptionOutputSchema},
+      prompt: promptText,
       config: {
         safetySettings: [
           {
