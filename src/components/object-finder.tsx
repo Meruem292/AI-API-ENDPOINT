@@ -145,7 +145,7 @@ export function ObjectFinder() {
     });
   }
 
-  const curlExample = `curl -X POST https://ai-api-endpoint-eight.vercel.app/api/find-objects \\
+  const curlExample = `curl -X POST [YOUR_APP_URL]/api/find-objects \\
 -H "Content-Type: application/json" \\
 -d '{
   "imageUrl": "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0",
